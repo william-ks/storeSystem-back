@@ -25,9 +25,13 @@ const login = async (req, res) => {
     }
 
     // generate token
-    const token = jwt.sign({ id: dbResponse[0].id }, process.env.JWT_PASS, {
-      expiresIn: "8h",
-    });
+    const token = jwt.sign(
+      { id: dbResponse[0].id, office: dbResponse[0].office },
+      process.env.JWT_PASS,
+      // {
+      //   expiresIn: "8h",
+      // }
+    );
 
     // response
     const response = {
