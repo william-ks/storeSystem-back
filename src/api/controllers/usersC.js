@@ -30,11 +30,24 @@ const create = async (req, res) => {
 
     return res.status(201).end();
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
+
+const readAll = async (req, res) => {
+  try {
+    const dbResponse = await db("users")
+      .where({ isDeleted: false })
+      .join("offices", "users.office_id", "=", "offices.id")
+      .select("users.name", "users.email", "offices.description");
+
+    return res.status(200).json(dbResponse);
+  } catch (e) {
     return res.status(500).json({ message: "Erro interno no servidor." });
   }
 };
 
 module.exports = {
   create,
+  readAll,
 };
