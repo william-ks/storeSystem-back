@@ -17,6 +17,18 @@ CREATE TABLE IF NOT EXISTS store (
     cel TEXT
 );
 
+CREATE TABLE IF NOT EXISTS offices (
+    id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL
+);
+
+INSERT INTO
+    offices (description)
+VALUES
+    ('Dev'),
+    ('Admin'),
+    ('Colaborador');
+
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
