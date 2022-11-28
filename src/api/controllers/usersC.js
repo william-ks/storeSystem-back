@@ -39,7 +39,8 @@ const read = async (req, res) => {
     const dbResponse = await db("users")
       .where({ isDeleted: false })
       .join("offices", "users.office_id", "=", "offices.id")
-      .select("users.name", "users.email", "offices.description");
+      .select("users.name", "users.email", "offices.description")
+      .orderBy("users.id");
 
     return res.status(200).json(dbResponse);
   } catch (e) {
@@ -85,7 +86,7 @@ const updateSelf = async (req, res) => {
       .update({ ...dataToUpdate })
       .where({ id: user.id });
 
-    return res.status(200).json({ message: "ok" });
+    return res.status(204);
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: "Erro interno no servidor." });
