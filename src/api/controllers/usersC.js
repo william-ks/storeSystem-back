@@ -86,7 +86,41 @@ const updateSelf = async (req, res) => {
       .update({ ...dataToUpdate })
       .where({ id: user.id });
 
-    return res.status(204);
+    return res.status(204).end();
+  } catch (e) {
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
+
+const updateSelfPass = async (req, res) => {
+  const user = req.user;
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return res
+      .status(400)
+      .json({ message: "Todos os campos são obrigratórios." });
+  }
+
+  try {
+    // validating old pass
+    const { password } = await db("users")
+      .where({ id: user.id, isDeleted: false })
+      .first();
+
+    const result = await bcrypt.compare(oldPassword, password);
+
+    if (!result) {
+      return res.status(400).json({ message: "Senha incorreta" });
+    }
+
+    const encryptedPass = await bcrypt.hash(newPassword, 10);
+
+    await db("users")
+      .update({ password: encryptedPass })
+      .where({ id: user.id });
+
+    return res.status(204).end();
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: "Erro interno no servidor." });
@@ -97,4 +131,5 @@ module.exports = {
   create,
   read,
   updateSelf,
+  updateSelfPass,
 };
