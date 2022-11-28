@@ -34,7 +34,7 @@ const create = async (req, res) => {
   }
 };
 
-const readAll = async (req, res) => {
+const read = async (req, res) => {
   try {
     const dbResponse = await db("users")
       .where({ isDeleted: false })
@@ -47,7 +47,53 @@ const readAll = async (req, res) => {
   }
 };
 
+const updateSelf = async (req, res) => {
+  const user = req.user;
+  const { name, email } = req.body;
+
+  const dataToUpdate = {};
+
+  try {
+    if (name) {
+      dataToUpdate.name = name;
+    }
+
+    if (email) {
+      // validating email
+      const dbResponse = await db("users")
+        .where({ isDeleted: false, email })
+        .andWhere("id", "!=", user.id)
+        .first();
+
+      if (dbResponse)
+        return res
+          .status(400)
+          .json({ message: "E-mail não autorizado ou já existe." });
+
+      if (email !== user.email) {
+        dataToUpdate.email = email;
+      }
+    }
+
+    if (!dataToUpdate.name && !dataToUpdate.email) {
+      return res
+        .status(400)
+        .json({ message: "Sem dados para serem atualizados." });
+    }
+
+    await db("users")
+      .update({ ...dataToUpdate })
+      .where({ id: user.id });
+
+    return res.status(200).json({ message: "ok" });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
+
 module.exports = {
   create,
-  readAll,
+  read,
+  updateSelf,
 };
