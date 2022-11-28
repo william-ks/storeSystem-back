@@ -39,7 +39,13 @@ const read = async (req, res) => {
     const dbResponse = await db("users")
       .where({ isDeleted: false })
       .join("offices", "users.office_id", "=", "offices.id")
-      .select("users.name", "users.email", "offices.office", "offices.level")
+      .select(
+        "users.id",
+        "users.name",
+        "users.email",
+        "offices.office",
+        "offices.level"
+      )
       .orderBy("users.id");
 
     return res.status(200).json(dbResponse);
