@@ -19,15 +19,16 @@ CREATE TABLE IF NOT EXISTS store (
 
 CREATE TABLE IF NOT EXISTS offices (
     id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL
+    level INTEGER NOT NULL,
+    office TEXT NOT NULL
 );
 
 INSERT INTO
-    offices (description)
+    offices (level, office)
 VALUES
-    ('Dev'),
-    ('Admin'),
-    ('Colaborador');
+    (1, 'dev'),
+    (2, 'Admin'),
+    (3, 'Colaborador');
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

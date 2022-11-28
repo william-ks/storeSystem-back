@@ -39,7 +39,7 @@ const read = async (req, res) => {
     const dbResponse = await db("users")
       .where({ isDeleted: false })
       .join("offices", "users.office_id", "=", "offices.id")
-      .select("users.name", "users.email", "offices.description")
+      .select("users.name", "users.email", "offices.office", "offices.level")
       .orderBy("users.id");
 
     return res.status(200).json(dbResponse);
@@ -122,7 +122,39 @@ const updateSelfPass = async (req, res) => {
 
     return res.status(204).end();
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
+
+const del = async (req, res) => {
+  const { user } = req;
+  const { id: idToDel } = req.params;
+
+  if (user.id == idToDel) {
+    return res
+      .status(401)
+      .json({ message: "Você não tem autorização para isso." });
+  }
+
+  try {
+    const dbResponse = await db("users")
+      .where("users.isDeleted", "=", false)
+      .andWhere("users.id", "=", user.id)
+      .join("offices", "offices.id", "=", "users.office_id")
+      .first();
+
+    if (dbResponse.level > 2) {
+      return res
+        .status(401)
+        .json({ message: "Você não tem autorização para isso." });
+    }
+
+    await db("users")
+      .update({ isDeleted: true })
+      .where({ id: Number(idToDel) });
+
+    return res.status(204).end();
+  } catch (e) {
     return res.status(500).json({ message: "Erro interno no servidor." });
   }
 };
@@ -132,4 +164,5 @@ module.exports = {
   read,
   updateSelf,
   updateSelfPass,
+  del,
 };
