@@ -54,6 +54,35 @@ const read = async (req, res) => {
   }
 };
 
+const readOne = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const dbResponse = await db("users")
+      .where({ isDeleted: false })
+      .andWhere("users.id", "=", Number(id))
+      .join("offices", "users.office_id", "=", "offices.id")
+      .select(
+        "users.id",
+        "users.name",
+        "users.email",
+        "offices.office",
+        "offices.level"
+      )
+      .first();
+
+    if (!dbResponse) {
+      return res
+        .status(404)
+        .json({ message: "Usuário não encontrado ou não existe." });
+    }
+
+    return res.status(200).json(dbResponse);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
+
 const updateSelf = async (req, res) => {
   const user = req.user;
   const { name, email } = req.body;
@@ -168,6 +197,7 @@ const del = async (req, res) => {
 module.exports = {
   create,
   read,
+  readOne,
   updateSelf,
   updateSelfPass,
   del,

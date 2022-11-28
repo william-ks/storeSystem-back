@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   create,
   read,
+  readOne,
   updateSelf,
   updateSelfPass,
   del,
@@ -10,6 +11,7 @@ const {
 
 router.post("/users", create);
 router.get("/users", read);
+router.get("/users/:id", readOne);
 router.put("/users", updateSelf);
 router.put("/users/pass", updateSelfPass);
 
