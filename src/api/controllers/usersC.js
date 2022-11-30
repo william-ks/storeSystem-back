@@ -172,7 +172,8 @@ const del = async (req, res) => {
   }
 
   try {
-    const dbResponse = await db("users")
+    // validating user hierachy
+    let dbResponse = await db("users")
       .where("users.isDeleted", "=", false)
       .andWhere("users.id", "=", user.id)
       .join("offices", "offices.id", "=", "users.office_id")
@@ -182,6 +183,15 @@ const del = async (req, res) => {
       return res
         .status(401)
         .json({ message: "Você não tem autorização para isso." });
+    }
+
+    // validating if exists id
+    dbResponse = await db("providers")
+      .where({ isDeleted: false, id: idToDel })
+      .first();
+
+    if (!dbResponse) {
+      return res.status(400).json({ message: "Usuário informado não existe." });
     }
 
     await db("users")
