@@ -39,15 +39,6 @@ CREATE TABLE IF NOT EXISTS users (
     "isDeleted" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE IF NOT EXISTS clients (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    cpf TEXT NOT NULL,
-    email TEXT,
-    credit INT NOT NULL,
-    "isDeleted" BOOLEAN NOT NULL DEFAULT FALSE
-);
-
 CREATE TABLE IF NOT EXISTS providers (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -65,6 +56,15 @@ CREATE TABLE IF NOT EXISTS tickets (
     "dueDate" DATE NOT NULL,
     "isPaid" BOOLEAN NOT NULL DEFAULT FALSE,
     "isDeleted" boolean default FALSE
+);
+
+CREATE TABLE IF NOT EXISTS clients (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    cpf TEXT NOT NULL,
+    email TEXT,
+    credit INT NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS products (

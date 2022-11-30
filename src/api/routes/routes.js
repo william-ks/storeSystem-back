@@ -3,6 +3,7 @@ const router = express.Router();
 const login = require("../controllers/login");
 const usersR = require("./usersR.js");
 const providersR = require("./providersR");
+const ticketsR = require("./ticketsR");
 const auth = require("../middlewares/auth");
 
 router.post("/login", login);
@@ -12,5 +13,6 @@ router.use(auth);
 
 router.use(usersR);
 router.use(providersR);
+router.use(ticketsR);
 
 module.exports = router;
