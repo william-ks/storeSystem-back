@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS clients (
 CREATE TABLE IF NOT EXISTS providers (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    "sellerDate" TEXT,
-    "sellerFrequency" TEXT,
     "orderDate" TEXT,
+    "orderFrequency" TEXT,
     "deliveryDate" TEXT,
+    "extraInfos" text,
     "isDeleted" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
