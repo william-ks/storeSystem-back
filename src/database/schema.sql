@@ -72,6 +72,8 @@ CREATE TABLE IF NOT EXISTS products (
     name NOT NULL,
     inventory INTEGER NOT NULL,
     provider_id INTEGER REFERENCES providers(id),
+    url TEXT,
+    path TEXT,
     "isDeleted" boolean default False
 );
 
